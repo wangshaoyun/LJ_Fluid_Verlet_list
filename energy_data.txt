@@ -1,0 +1,5 @@
+1                   !epsilon     
+1                   !sigma       
+20.52246D0           !rc_lj       
+20.52246D0           !rv_lj       
+1D0                 !rsk_lj            
