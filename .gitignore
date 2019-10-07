@@ -1,0 +1,10 @@
+
+*.o
+data/energy_and_time.txt
+data/pos.txt
+data/pos1.txt
+data/pressure.txt
+data/rdf.txt
+data/time.txt
+*.mod
+main

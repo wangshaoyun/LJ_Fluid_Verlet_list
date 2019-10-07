@@ -132,9 +132,11 @@ subroutine LJ_energy (EE)
     do i = 1, NN-1
       do j = i+1, NN
         call rij_and_rr( rij, rr, i, j )
-        inv_rr2  = sigma*sigma/rr
-        inv_rr6  = inv_rr2 * inv_rr2 * inv_rr2
-        EE = EE + 4 * epsilon * ( inv_rr6 * inv_rr6 - inv_rr6 + 0.25D0)
+        if (rr<rc_lj*rc_lj) then
+          inv_rr2  = sigma*sigma/rr
+          inv_rr6  = inv_rr2 * inv_rr2 * inv_rr2
+          EE = EE + 4 * epsilon * ( inv_rr6 * inv_rr6 - inv_rr6 )
+        end if
       end do
     end do
   else
@@ -152,7 +154,7 @@ subroutine LJ_energy (EE)
         if ( rr < rc_lj * rc_lj ) then
           inv_rr2  = sigma*sigma/rr
           inv_rr6  = inv_rr2 * inv_rr2 * inv_rr2
-          EE = EE + 4 * epsilon * ( inv_rr6 * inv_rr6 - inv_rr6 + 0.25D0) / 2
+          EE = EE + 4 * epsilon * ( inv_rr6 * inv_rr6 - inv_rr6 ) / 2
           ! ! ! must divided by 2 because of the repeating cycle
         end if
       end do
@@ -178,7 +180,7 @@ subroutine update_verlet_list
   use global_variables
   implicit none
 
-  if ( mod(step, nint(rsk_lj/dr/2)) == 0 .and. rc_lj<Lx/4 ) then
+  if ( mod(step, nint(rsk_lj/dr/4)) == 0 .and. rc_lj<Lx/4 ) then
     call build_lj_verlet_list
   end if
 
@@ -261,10 +263,12 @@ subroutine Delta_lj_Energy(DeltaE)
       !
       !lj energy
       rr = rij(1) * rij(1) + rij(2) * rij(2) + rij(3) * rij(3)
-      inv_rr2  = sigma2 / rr
-      inv_rr6  = inv_rr2 * inv_rr2 * inv_rr2
-      inv_rr12 = inv_rr6 * inv_rr6
-      EE       = EE + inv_rr6 - inv_rr12 - 0.25D0
+      if ( rr < rc_lj2 ) then
+        inv_rr2  = sigma2 / rr
+        inv_rr6  = inv_rr2 * inv_rr2 * inv_rr2
+        inv_rr12 = inv_rr6 * inv_rr6
+        EE       = EE + inv_rr6 - inv_rr12 
+      end if
       !
       !Energy of new configuration
       !
@@ -275,10 +279,12 @@ subroutine Delta_lj_Energy(DeltaE)
       !
       !lj energy
       rr = rij(1) * rij(1) + rij(2) * rij(2) + rij(3) * rij(3)
-      inv_rr2  = sigma2 / rr
-      inv_rr6  = inv_rr2 * inv_rr2 * inv_rr2
-      inv_rr12 = inv_rr6 * inv_rr6
-      EE       = EE + inv_rr12 - inv_rr6 + 0.25D0
+      if ( rr < rc_lj2 ) then
+        inv_rr2  = sigma2 / rr
+        inv_rr6  = inv_rr2 * inv_rr2 * inv_rr2
+        inv_rr12 = inv_rr6 * inv_rr6
+        EE       = EE + inv_rr12 - inv_rr6 
+      end if
     end do
   else
     if (ip==1) then
@@ -305,7 +311,7 @@ subroutine Delta_lj_Energy(DeltaE)
         inv_rr2  = sigma2 / rr
         inv_rr6  = inv_rr2 * inv_rr2 * inv_rr2
         inv_rr12 = inv_rr6 * inv_rr6
-        EE       = EE + inv_rr6 - inv_rr12 - 0.25D0
+        EE       = EE + inv_rr6 - inv_rr12 
       end if
       !
       !Energy of new configuration
@@ -321,7 +327,7 @@ subroutine Delta_lj_Energy(DeltaE)
         inv_rr2  = sigma2 / rr
         inv_rr6  = inv_rr2 * inv_rr2 * inv_rr2
         inv_rr12 = inv_rr6 * inv_rr6
-        EE       = EE + inv_rr12 - inv_rr6 + 0.25D0
+        EE       = EE + inv_rr12 - inv_rr6 
       end if
     end do
   end if
@@ -366,7 +372,7 @@ subroutine initialize_lj_parameters
   lj_point   = 0
   v_verlet = 8.D0/3 * pi * rv_lj**3
   if ( allocated(lj_pair_list) ) deallocate(lj_pair_list)
-  allocate(  lj_pair_list(100*NN*ceiling(rho*v_verlet))  )
+  allocate(  lj_pair_list(10*NN*ceiling(rho*v_verlet))  )
   lj_pair_list = 0
 
 end subroutine initialize_lj_parameters

@@ -92,6 +92,7 @@ subroutine Monte_Carlo_Move( EE, DeltaE )
 !       call total_energy(EE2)
 !       write(*,*) EE2 - EE1, DeltaE, EE2, EE1  
   end do
+!   stop
 
 end subroutine Monte_Carlo_Move
 

@@ -178,7 +178,7 @@ subroutine compute_radial_distribution_function
       call rij_and_rr(rij,rr,i,j)
       if (sqrt(rr)<Lx/2) then
         k = int( sqrt(rr)/del_r ) + 1
-        rdf(k,2) = rdf(k,2) + 2 
+        rdf(k,2) = rdf(k,2) + 2/(4*pi*rr*NN*NN*del_r)*Lx*Ly*Lz
       end if
     end do 
   end do 
@@ -186,7 +186,7 @@ subroutine compute_radial_distribution_function
   open(31,file='./data/rdf.txt')
     do i=1, 500
       ri = (i-0.5) * del_r
-      write(31,310) del_r*i, rdf(i,2)/ri/ri/del_r
+      write(31,310) del_r*i, rdf(i,2)/((step-stepNum0)/DeltaStep2)
       310 format(2F20.6)
     end do
   close(31)
@@ -236,7 +236,7 @@ subroutine write_pos1(j)
   close(30)
 
   open(32,file='./start_time.txt')
-    write(32,*) 1
+    write(32,*) 0
     write(32,*) j
     write(32,*) dr
     call cpu_time(finished)
