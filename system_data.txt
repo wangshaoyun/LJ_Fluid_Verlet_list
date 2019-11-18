@@ -1,10 +1,10 @@
 0.8442          ! rho
-0.66667D0       ! Beta:     1/kT, T=298K
-5000             ! NN
-1000            ! StepNum0
-3000            ! StepNum:  steps of running
-50              ! DeltaStep1: compute physical quantities.
-50              ! DeltaStep2: output.
+0.66476D0       ! Beta:     1/kT, T=298K
+400             ! NN
+0000               ! StepNum0
+10000           ! StepNum:  steps of running
+10000             ! DeltaStep1: compute physical quantities.
+10000             ! DeltaStep2: output.
 0.05D0          ! dr:       distance of each move
 0.5D0           ! best_accpt_ratio
 5D-3            ! Delta dr

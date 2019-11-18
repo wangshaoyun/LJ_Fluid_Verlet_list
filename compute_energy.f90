@@ -372,7 +372,7 @@ subroutine initialize_lj_parameters
   lj_point   = 0
   v_verlet = 8.D0/3 * pi * rv_lj**3
   if ( allocated(lj_pair_list) ) deallocate(lj_pair_list)
-  allocate(  lj_pair_list(10*NN*ceiling(rho*v_verlet))  )
+  allocate(  lj_pair_list(50*NN*ceiling(rho*v_verlet))  )
   lj_pair_list = 0
 
 end subroutine initialize_lj_parameters

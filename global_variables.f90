@@ -44,8 +44,8 @@ module global_variables
 
 !##########################arrays##########################!
  real*8, allocatable, dimension(:,:) :: pos     !old position array
- real*8,  dimension(4)   :: pos_ip0
- real*8,  dimension(4)   :: pos_ip1
+ real*8,  dimension(3)   :: pos_ip0
+ real*8,  dimension(3)   :: pos_ip1
 !real*8, allocatable, dimension(:,:) :: pos_ip0 !old position of part of chains
 !real*8, allocatable, dimension(:,:) :: pos_ip1 !new position of part of chains
  integer :: ip                                  !The chain that is choosed
